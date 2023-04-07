@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.text-brown {
+    color: #927666;
+}
+
+.text-deep-brown {
+    color: #5D3924;
+}
+
+.container {
+  font-family: sans-serif;
+  color:red;
+  all: initial;
+}
