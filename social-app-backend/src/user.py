@@ -3,7 +3,6 @@ from flask_pymongo import ObjectId
 from flask_bcrypt import Bcrypt
 from database import mongo
 
-
 user = Blueprint('user', __name__)
 bcrypt = Bcrypt()
 
@@ -34,7 +33,7 @@ def validateLogin():
         del targetUser['_id']
         return jsonify(targetUser)
     else:
-        return jsonify({'msg': 'wrong-credentials'})
+        return jsonify({'error': True})
         
 
 @user.route('/create', methods=['POST'])

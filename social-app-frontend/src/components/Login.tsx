@@ -12,15 +12,17 @@ function Login() : JSX.Element {
 
     const submitCreateUserForm = async (event: { preventDefault: () => void; }): Promise<void> => {
         event.preventDefault();
+        const user = await validateUser()
 
-        if (await userLoginInfoIsValid()) {
+        if (user !== 'error') {
+            localStorage.setItem('user', user.username)
             navigate('/home')
         } else {
             setErrorLoginUser(true)
         }
     }
 
-    const userLoginInfoIsValid = async () => {
+    const validateUser = async () => {
         const response = await fetch(`${API_URL}/users/login`, {
             method: 'POST',
             headers: {
@@ -31,11 +33,13 @@ function Login() : JSX.Element {
             })
         })
         const data = await response.json()
-        if (data.msg === 'wrong-credentials') {
-            return false
+        console.log('data', data)
+
+        if (data.error) {
+            return 'error'
         }
 
-        return true
+        return data
     }
 
     const onChangeInput = (event: { target: { value: any; name: string; }; }): void => {

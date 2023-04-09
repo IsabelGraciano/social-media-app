@@ -16,3 +16,5 @@ instance/
 # Ignore dependencies installed via pip
 venv/
 *.egg-info/
+
+config.py

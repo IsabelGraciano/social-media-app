@@ -1,11 +1,18 @@
+import { useState } from "react"
 import Searchbar from "./Searchbar"
 import { BsPlus, BsBell } from 'react-icons/bs'
 import Avatar from "./Avatar"
 import AddPostModal from "./AddPostModal"
 
 function Navbar() {
-    const addPost = () => {
+    const [isOpenModal, setIsOpenModal] = useState(false)
+    
+    const onCloseModal = () => {
+        setIsOpenModal(false)
+    }
 
+    const addPost = () => {
+        setIsOpenModal(true)
     }
 
     return(
@@ -19,7 +26,9 @@ function Navbar() {
                <BsBell className="w-5 h-5 cursor-pointer" />
                <Avatar />
             </div>
-            <AddPostModal/>
+            {isOpenModal && 
+                <AddPostModal onCloseModal={onCloseModal} />
+            }
         </div>
     )
 }
