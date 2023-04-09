@@ -17,4 +17,4 @@ instance/
 venv/
 *.egg-info/
 
-config.py
+src/config.py
