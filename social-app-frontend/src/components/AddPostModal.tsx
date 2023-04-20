@@ -1,16 +1,64 @@
 import { BsX, BsPlus, BsTrash } from "react-icons/bs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ImageUploading, { ImageListType } from "react-images-uploading";
 import API_URL from '../../config';
+
+import { firebaseInitialize } from "../utils/firebaseCongif";
+
+import { initializeApp } from 'firebase/app';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 
 interface props {
   onCloseModal: any,
 }
 
 function AddPostModal({onCloseModal}: props) {
+  let username = ''
   const [image, setImage] = useState([])
   const [isImage, setIsImage] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [caption, setCaption] = useState('')
+  const [imageRemoteURL, setImageRemoteURL] = useState('')
+
+  initializeApp(firebaseInitialize)
+
+  useEffect(() => {
+    username = localStorage.getItem('user') || ''
+  }, [])
+
+  async function handleImageUpload() {
+    setIsLoading(true)
+    const storageRef = getStorage()
+    console.log('username', username)
+    const imageRef = ref(storageRef, `images/${username}/${image[0].file?.name}`)
+    console.log('------------', imageRef, image[0].file?.name)
+
+    try {
+      await uploadBytes(imageRef, image[0].file)
+      const url = await getDownloadURL(imageRef)
+      console.log('Image URL:', url)
+      setImageRemoteURL(url)
+      setIsLoading(false)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const saveImage = () => {
+    console.log('post', caption, image[0])
+    fetch(`${API_URL}/posts/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        'caption': caption,
+        'image': image[0]
+      })
+    })
+
+  }
 
   const imageURL = (imageList: ImageListType) => {
     if (imageList.length === 0) {
@@ -29,21 +77,6 @@ function AddPostModal({onCloseModal}: props) {
     setIsImage(true);
   }
 
-  const postImage = () => {
-    console.log('post', caption, image[0])
-    fetch(`${API_URL}/posts/create`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        'caption': caption,
-        'image': image[0]
-      })
-    })
-
-  }
-
   const onCaptionChange = (event: any) => {
     setCaption(event.target.value)
   }
@@ -51,6 +84,8 @@ function AddPostModal({onCloseModal}: props) {
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center z-20 items-center">
       <div className="fixed top-0 left-0 w-full h-full bg-slate-950 z-30 bg-opacity-50" onClick={onCloseModal} />
+      {isLoading && <div id="loader" className="relative z-50 w-10 h-10 border border-x-4 border-y-4 border-t-4 border-gray-100 border-t-slate-600 rounded-full animate-spin"></div>}
+
       <div
         id="add-post-modal"
         className="absolute bg-gray-100 z-40 h-[500px] w-2/4 left-0 right-0 top-0 bottom-0 m-auto rounded-3xl"
@@ -120,7 +155,7 @@ function AddPostModal({onCloseModal}: props) {
           id="modal-footer"
           className="absolute bottom-0 h-20 w-full rounded-b-3xl p-5"
         >
-          <button className="float-right rounded-3xl bg-gray-300 h-10 w-24" onClick={postImage}>
+          <button className="float-right rounded-3xl bg-gray-300 h-10 w-24" onClick={handleImageUpload}>
             Post
           </button>
         </div>

@@ -1,9 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react';
 import API_URL from '../../config';
+import { setUsernameInLocalStorage } from '../utils/localStorageUsername'
 
+interface props {
+    setIsAuthenticated: Function
+}
 
-function Login() : JSX.Element {
+function Login({setIsAuthenticated}: props) : JSX.Element {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
@@ -15,7 +19,7 @@ function Login() : JSX.Element {
         const user = await validateUser()
 
         if (user !== 'error') {
-            localStorage.setItem('user', user.username)
+            setIsAuthenticated(true)
             navigate('/home')
         } else {
             setErrorLoginUser(true)

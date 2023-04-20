@@ -7,7 +7,7 @@ function Searchbar() {
                 type="text"
                 name="searchbar"
                 id="searchbar"
-                className='bg-gray-200 h-8 w-64 rounded-full pl-10 pr-3'
+                className='bg-gray-200 h-8 w-64 rounded-3xl pl-10 pr-3'
             />
             <label
                 htmlFor="searchbar"
