@@ -13,8 +13,8 @@ def posts_db():
 
 @post.route('/create', methods=['POST'])
 def createPost():
-    username = request.json['username']
-    author = users_db().find_one({'username': username})
+    authorId = request.json['author']
+    # author = users_db().find_one({'_id': ObjectId(authorId)})
     
     caption = request.json['caption']
     image = request.json['image']
@@ -22,7 +22,7 @@ def createPost():
     current_time = datetime.now()
 
     id = posts_db().insert_one({
-        'author': author['_id'],
+        'author': ObjectId(authorId),
         'caption': caption,
         'image': image,
         'likes': 0,
@@ -31,4 +31,4 @@ def createPost():
         'updatedAt': current_time
     })
 
-    return jsonify({'post': id})
+    return jsonify({'post': str(id)})

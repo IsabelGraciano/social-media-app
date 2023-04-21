@@ -1,13 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react';
 import API_URL from '../../config';
-import { setUsernameInLocalStorage } from '../utils/localStorageUsername'
 
 interface props {
-    setIsAuthenticated: Function
+    onLogin: Function
 }
 
-function Login({setIsAuthenticated}: props) : JSX.Element {
+function Login({onLogin}: props) : JSX.Element {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
@@ -19,7 +18,7 @@ function Login({setIsAuthenticated}: props) : JSX.Element {
         const user = await validateUser()
 
         if (user !== 'error') {
-            setIsAuthenticated(true)
+            onLogin(true)
             navigate('/home')
         } else {
             setErrorLoginUser(true)
@@ -37,7 +36,8 @@ function Login({setIsAuthenticated}: props) : JSX.Element {
             })
         })
         const data = await response.json()
-        console.log('data', data)
+        console.log(data)
+        localStorage.setItem('user', data.user)
 
         if (data.error) {
             return 'error'

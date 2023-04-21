@@ -8,14 +8,19 @@ import Settings from "./components/Settings"
 import ProtectedRoute from "./components/ProtectedRoute"
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem("isAuthenticated") === "true")
+
+  function handleLogin() {
+    setIsAuthenticated(true);
+    localStorage.setItem("isAuthenticated", "true");
+  }
 
   return (
     <Router>
       <div className='container p-2'>
         <Routes>
           <Route path='/signup' element={<Signup />} />
-          <Route path='/login' element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path='/login' element={<Login onLogin={handleLogin} />} />
 
           <Route
             path="/home"

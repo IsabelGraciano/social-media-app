@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import Searchbar from "./Searchbar"
 import { BsPlus, BsBell } from 'react-icons/bs'
 import Avatar from "./Avatar"
-import AddPostModal from "./AddPostModal"
+import CreatePost from "./createPost"
 
 function Navbar() {
     const [isOpenModal, setIsOpenModal] = useState(false)
@@ -45,7 +45,7 @@ function Navbar() {
             }
             </div>
             {isOpenModal &&
-                <AddPostModal onCloseModal={onCloseModal} />
+                <CreatePost onCloseModal={onCloseModal} />
             }
         </div>
     )

@@ -30,8 +30,8 @@ def validateLogin():
     targetUser = db().find_one({'username': username})
 
     if targetUser is not None and bcrypt.check_password_hash(targetUser['password'], password):
-        del targetUser['_id']
-        return jsonify(targetUser)
+        print(targetUser['_id'])
+        return jsonify({'user': str(targetUser['_id'])})
     else:
         return jsonify({'error': True})
         
